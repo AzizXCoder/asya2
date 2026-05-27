@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurnal Petualangan</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="compass-icon">🧭</div>
+            <p class="preloader-text">Menyiapkan Jurnal Si Cantik...</p>
+            <div class="loading-bar"></div>
+        </div>
+    </div>
+
+    <button id="adminLoginBtn" class="theme-toggle-btn" style="right: 140px;">🔑 Login Admin</button>
+    <button id="themeToggle" class="theme-toggle-btn" aria-label="Ubah Tema">🌓 Mode</button>
+
+    <div id="loginModal" class="lightbox-overlay hidden">
+        <div class="interactive-box white-box" style="width: 320px; border-style: solid; text-align: center;">
+            <span class="lightbox-close" id="closeLogin" style="position: static; float: right; font-size: 1.5rem; color: var(--text-main); line-height: 1; cursor: pointer;">&times;</span>
+            <h3 style="margin-bottom: 15px; font-size: 1.2rem;">🔑 Login Admin</h3>
+            <input type="text" id="usernameInput" placeholder="Username" style="width: 100%; padding: 10px 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--bg-accent); background: var(--bg-main); color: var(--text-main); font-family: 'Fredoka', sans-serif; outline: none;">
+            <input type="password" id="passwordInput" placeholder="Password" style="width: 100%; padding: 10px 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid var(--bg-accent); background: var(--bg-main); color: var(--text-main); font-family: 'Fredoka', sans-serif; outline: none;">
+            <button id="submitLoginBtn" class="action-btn small-btn">Masuk 🔓</button>
+        </div>
+    </div>
+
+    <header class="hero" id="parallax-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-container">
+            <span class="badge">⚠️ Kawasan Rawan Kangen Liburan</span>
+            <h1 class="main-title" id="typewriter-title"></h1>
+            <p class="subtitle">
+                Kumpulan tempat yang pernah aku datangi, lengkap dengan drama di balik layar dan isi pikiran random-ku
+            </p>
+        </div>
+    </header>
+
+    <main class="main-container">
+        
+        <div id="adminPanel" class="interactive-box white-box hidden scroll-reveal" style="margin-bottom: 40px; border: 2px solid var(--text-badge); text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                <h3 style="color: var(--text-badge); font-size: 1.2rem; margin: 0;">🛠️ Panel Kendali Admin (Mode: Asya & Aziz)</h3>
+                <button id="logoutBtn" class="action-btn small-btn" style="background-color: #FF4A5A; color: #fff;">Keluar Admin 🔒</button>
+            </div>
+            
+            <div class="grid-layout" style="gap: 30px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                <div style="border-right: 1px dashed var(--bg-accent); padding-right: 10px;">
+                    <h4 style="margin-bottom: 10px; font-size: 1rem;">🐾 Tambah Jejak Kaki Baru</h4>
+                    <input type="text" id="newCardLoc" placeholder="📍 Lokasi (Contoh: Curug Badak, Jabar)" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--bg-accent); background: var(--bg-main); color: var(--text-main); font-family: 'Fredoka', sans-serif; outline: none;">
+                    <input type="text" id="newCardImg" placeholder="🖼️ URL Gambar (Kosongkan untuk default)" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--bg-accent); background: var(--bg-main); color: var(--text-main); font-family: 'Fredoka', sans-serif; outline: none;">
+                    <input type="text" id="newCardHighlight" placeholder="🌟 Highlight Menarik" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--bg-accent); background: var(--bg-main); color: var(--text-main); font-family: 'Fredoka', sans-serif; outline: none;">
+                    <textarea id="newCardStory" placeholder="🎬 Behind The Scene Story..." rows="3" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--bg-accent); background: var(--bg-main); color: var(--text-main); font-family: 'Fredoka', sans-serif; resize: none; outline: none;"></textarea>
+                    <select id="newCardCategory" style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 8px; border: 1px solid var(--bg-accent); background: var(--bg-card); color: var(--text-main); font-family: 'Fredoka', sans-serif; outline: none;">
+                        <option value="curug">🌊 Air Terjun (Curug)</option>
+                        <option value="gunung">⛰️ Gunung</option>
+                    </select>
+                    <button id="saveCardBtn" class="action-btn small-btn" style="width: 100%;">Post Jejak Kaki 🚀</button>
+                </div>
+
+                <div>
+                    <h4 style="margin-bottom: 10px; font-size: 1rem;">Brain 🧠 Catatan Pikiran Baru</h4>
+                    <textarea id="newThoughtText" placeholder="Tulis isi pikiran random di sini..." rows="4" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--bg-accent); background: var(--bg-main); color: var(--text-main); font-family: 'Fredoka', sans-serif; resize: none; outline: none;"></textarea>
+                    <input type="text" id="newThoughtMeta" placeholder="— Jam 2 malam, sambil..." style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 8px; border: 1px solid var(--bg-accent); background: var(--bg-main); color: var(--text-main); font-family: 'Fredoka', sans-serif; outline: none;">
+                    <button id="saveThoughtBtn" class="action-btn small-btn" style="width: 100%;">Post Pikiran Random 💭</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="filter-container scroll-reveal">
+            <button class="filter-btn active" data-filter="all">✨ Semua Jejak</button>
+            <button class="filter-btn" data-filter="curug">🌊 Air Terjun</button>
+            <button class="filter-btn" data-filter="gunung">⛰️ Gunung</button>
+        </div>
+
+        <div class="grid-layout">
+            
+            <div class="cards-column">
+                <h2 class="section-title">Dokumentasi Jejak Kaki 🐾</h2>
+
+                <article class="card scroll-reveal" data-category="curug">
+                    <div class="card-image-wrapper">
+                        <img src="img/3440753447750463929-d.jpeg" alt="Curug Koja, Jabar" class="card-img clickable-img">
+                        <span class="card-location">📍 curug koja, jabar</span>
+                        <button class="like-btn" data-liked="false">
+                            <span class="heart-icon">❤️</span> <span class="like-count">12</span>
+                        </button>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="highlight-box">
+                            <span class="highlight-badge">HIGHLIGHT MENARIK 🌟</span>
+                            <p class="highlight-text">"Bentuk batuan berundaknya mirip kastil kuno"</p>
+                        </div>
+
+                        <h3 class="story-title">Behind The Scene 🎬</h3>
+                        <p class="story-text">
+                            "Bela-belain ke sini demi healing dari penatnya tugas dan jeritan dompet. Tapi pas nyampe bawah curug dan ngeliat medannya, aku malah sibuk nahan napas biar perut kelihatan rata pas difoto. Pulang-pulang bukan makin tenang, malah encok karena jarang olahraga tapi sok-sokan jadi anak alam."
+                        </p>
+                    </div>
+                </article>
+
+                <article class="card scroll-reveal" data-category="gunung">
+                    <div class="card-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=800&q=80" alt="Puncak Gunung Dingin, Jabar" class="card-img clickable-img">
+                        <span class="card-location">📍 Puncak Gunung Dingin, Jabar</span>
+                        <button class="like-btn" data-liked="false">
+                            <span class="heart-icon">❤️</span> <span class="like-count">24</span>
+                        </button>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="highlight-box">
+                            <span class="highlight-badge">HIGHLIGHT MENARIK 🌟</span>
+                            <p class="highlight-text">"Suhu udara 14 derajat celcius, berhasil bikin idung aku merah-merah gemas ala cewek Korea."</p>
+                        </div>
+
+                        <h3 class="story-title">Behind The Scene 🎬</h3>
+                        <p class="story-text">
+                            Bela-belain bangun jam 3 pagi demi dapet sunrise. Pas nyampe atas, bukannya terharu liat pemandangan, aku malah sibuk nyari kang bajigur karena menggigil parah. Di foto ini aku kelihatan tersenyum anggun, padahal gigi bagian dalam lagi gemetaran bunyi *klek-klek-klek*.
+                        </p>
+                    </div>
+                </article>
+
+            </div>
+
+            <div class="sidebar-column">
+                <h2 class="section-title">Isi Pikiran Random 🧠💭</h2>
+                
+                <div class="thought-box pop-box scroll-reveal">
+                    <div class="quote-mark">“</div>
+                    <p class="thought-text-content">
+                        "Kenapa ya kalau lagi traveling bawaannya pengen beli baju baru? Padahal isi lemari di rumah udah mau meledak. Dasar aku."
+                    </p>
+                    <span class="thought-meta">— Jam 2 malam, sambil scroll e-commerce</span>
+                </div>
+
+                <div class="thought-box white-box scroll-reveal">
+                    <p class="thought-text-content-small">
+                        Misteri terbesar abad ini: Kenapa mie instan yang dimasak di tempat wisata atau di atas gunung rasanya jauh lebih enak 5000x lipat dibanding masak sendiri di kostan? Apakah kuahnya dicampur air berkah petualangan?
+                    </p>
+                    <div class="thought-footer">
+                        <span>#PertanyaanHidup</span>
+                        <span>Baru Saja</span>
+                    </div>
+                </div>
+
+                <div class="interactive-box scroll-reveal">
+                    <h3>🔮 Mood Meter Hari Ini</h3>
+                    <p class="interactive-desc">Klik tombol di bawah buat tahu kamu lagi butuh liburan tipe apa sekarang!</p>
+                    <button id="moodBtn" class="action-btn">Cek Ramalan Liburan ✈️</button>
+                    <div id="moodResult" class="mood-result hidden"></div>
+                </div>
+
+                <div class="secret-message-box scroll-reveal">
+                    <div class="envelope-badge">✉️ Secret Message</div>
+                    <h3>Tinggalkan Pesan Random-mu!</h3>
+                    <p class="secret-desc">Punya rekomendasi tempat seru atau mau sekadar nyapa? Tulis di bawah secara anonim!</p>
+                    
+                    <form action="https://formsubmit.co/aziznation123@gmail.com" method="POST" id="secretForm">
+                        <input type="hidden" name="_next" value="window.location.href">
+                        <input type="hidden" name="_captcha" value="false">
+                        
+                        <textarea name="Pesan Anonim" id="secretInput" placeholder="Tulis sesuatu yang manis di sini... 🌸" rows="3" required></textarea>
+                        <button type="submit" id="sendSecretBtn" class="action-btn small-btn">Kirim Surat 🚀</button>
+                    </form>
+                    
+                    <div id="secretSuccess" class="secret-status hidden">Pesanmu berhasil meluncur ke kotak rahasia! Teuteup anonim kok 😉💖</div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="lightbox" class="lightbox-overlay hidden">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="" alt="Zoomed Image">
+        <div id="lightbox-caption"></div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2026 Jurnal Estetik Si Tuan Putri. Dibuat dengan cinta, kopi, dan skill koding tingkat dewa. ✨</p>
+    </footer>
+    
+    <!-- INTEGRASI FIREBASE V12 MODULAR SDK & LOGIKA WEB -->
+    <script type="module">
+        // Import module dari Firebase CDN resmi
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+        import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+        // Konfigurasi asli milik jurnal-asya-aziz
+        const firebaseConfig = {
+            apiKey: "AIzaSyDCwTz4R6g_rjyS_SrIDmsZl1ARPE8X_WM",
+            authDomain: "jurnal-asya-aziz-da37e.firebaseapp.com",
+            databaseURL: "https://jurnal-asya-aziz-da37e-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "jurnal-asya-aziz-da37e",
+            storageBucket: "jurnal-asya-aziz-da37e.firebasestorage.app",
+            messagingSenderId: "978835300268",
+            appId: "1:978835300268:web:8cd640ab2352aa8761a409",
+            measurementId: "G-H547906ZCX"
+        };
+
+        // Konek ke Firebase & Database Singapore
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Ambil elemen DOM kontainer tempat nempelin konten
+        const cardsColumn = document.querySelector('.cards-column');
+        const sidebarColumn = document.querySelector('.sidebar-column');
+
+        // --- A. AMBIL DATA REALTIME DARI CLOUD DATABASE ---
+        if (cardsColumn) {
+            onChildAdded(ref(db, 'cards'), (snapshot) => {
+                const data = snapshot.val();
+                renderNewCard(data.loc, data.img, data.highlight, data.story, data.category);
+            });
+        }
+
+        if (sidebarColumn) {
+            onChildAdded(ref(db, 'thoughts'), (snapshot) => {
+                const data = snapshot.val();
+                renderNewThought(data.text, data.meta);
+            });
+        }
+
+        // --- B. LOGIKA TOMBOL FORM ADMIN (KIRIM DATA KE CLOUD) ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const saveCardBtn = document.getElementById('saveCardBtn');
+            if (saveCardBtn) {
+                saveCardBtn.addEventListener('click', () => {
+                    const loc = document.getElementById('newCardLoc').value.trim();
+                    const img = document.getElementById('newCardImg').value.trim() || 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=800&q=80';
+                    const highlight = document.getElementById('newCardHighlight').value.trim();
+                    const story = document.getElementById('newCardStory').value.trim();
+                    const category = document.getElementById('newCardCategory').value;
+
+                    if (!loc || !highlight || !story) {
+                        alert('Harap isi semua teks box petualangan terlebih dahulu! ⚠️');
+                        return;
+                    }
+
+                    // Push data ke table 'cards' Firebase Cloud
+                    push(ref(db, 'cards'), { loc, img, highlight, story, category });
+
+                    // Reset Input
+                    document.getElementById('newCardLoc').value = '';
+                    document.getElementById('newCardImg').value = '';
+                    document.getElementById('newCardHighlight').value = '';
+                    document.getElementById('newCardStory').value = '';
+                    alert('Jejak Kaki baru berhasil dikirim ke Cloud Server! 🐾✨');
+                });
+            }
+
+            const saveThoughtBtn = document.getElementById('saveThoughtBtn');
+            if (saveThoughtBtn) {
+                saveThoughtBtn.addEventListener('click', () => {
+                    const text = document.getElementById('newThoughtText').value.trim();
+                    const meta = document.getElementById('newThoughtMeta').value.trim() || '— Baru Saja';
+
+                    if (!text) {
+                        alert('Isi pikiranmu tidak boleh kosong, Admin! 🧠');
+                        return;
+                    }
+
+                    // Push data ke table 'thoughts' Firebase Cloud
+                    push(ref(db, 'thoughts'), { text, meta });
+
+                    // Reset Input
+                    document.getElementById('newThoughtText').value = '';
+                    document.getElementById('newThoughtMeta').value = '';
+                    alert('Isi pikiran acak berhasil disimpan ke Cloud! 🧠💭');
+                });
+            }
+        });
+
+        // --- C. FUNGSI PEMBANTU RENDER ELEMEN ---
+        function renderNewCard(loc, img, highlight, story, category) {
+            const newCard = document.createElement('article');
+            newCard.className = 'card active'; 
+            newCard.setAttribute('data-category', category);
+            newCard.innerHTML = `
+                <div class="card-image-wrapper">
+                    <img src="${img}" alt="${loc}" class="card-img clickable-img">
+                    <span class="card-location">📍 ${loc}</span>
+                    <button class="like-btn" data-liked="false">
+                        <span class="heart-icon">❤️</span> <span class="like-count">0</span>
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="highlight-box">
+                        <span class="highlight-badge">HIGHLIGHT MENARIK 🌟</span>
+                        <p class="highlight-text">"${highlight}"</p>
+                    </div>
+                    <h3 class="story-title">Behind The Scene 🎬</h3>
+                    <p class="story-text">${story}</p>
+                </div>
+            `;
+
+            // Hubungkan fungsi Like & Lightbox bawaan script.js
+            if (typeof window.bindNewCardEvents === 'function') {
+                window.bindNewCardEvents(newCard);
+            }
+            cardsColumn.insertBefore(newCard, cardsColumn.children[1]);
+        }
+
+        function renderNewThought(text, meta) {
+            const newThought = document.createElement('div');
+            newThought.className = 'thought-box pop-box active';
+            newThought.innerHTML = `
+                <div class="quote-mark">“</div>
+                <p class="thought-text-content">"${text}"</p>
+                <span class="thought-meta">${meta}</span>
+            `;
+            sidebarColumn.insertBefore(newThought, sidebarColumn.children[1]);
+        }
+    </script>
+
+    <!-- Script Utama Fitur Animasi & Login -->
+    <script src="script.js"></script>
+</body>
+</html>

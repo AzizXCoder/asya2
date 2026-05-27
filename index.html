@@ -187,13 +187,14 @@
         <p>&copy; 2026 Jurnal Estetik Si Tuan Putri. Dibuat dengan cinta, kopi, dan skill koding tingkat dewa. ✨</p>
     </footer>
     
-    <!-- INTEGRASI FIREBASE V12 MODULAR SDK & LOGIKA WEB -->
+    <!-- Script Utama Fitur Animasi, Login, & Core DOM (Dimuat Lebih Awal) -->
+    <script src="script.js"></script>
+
+    <!-- INTEGRASI FIREBASE V12 MODULAR SDK & LOGIKA REALTIME BINDING -->
     <script type="module">
-        // Import module dari Firebase CDN resmi
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
         import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-        // Konfigurasi asli milik jurnal-asya-aziz
         const firebaseConfig = {
             apiKey: "AIzaSyDCwTz4R6g_rjyS_SrIDmsZl1ARPE8X_WM",
             authDomain: "jurnal-asya-aziz-da37e.firebaseapp.com",
@@ -205,122 +206,89 @@
             measurementId: "G-H547906ZCX"
         };
 
-        // Konek ke Firebase & Database Singapore
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Ambil elemen DOM kontainer tempat nempelin konten
-        const cardsColumn = document.querySelector('.cards-column');
-        const sidebarColumn = document.querySelector('.sidebar-column');
+        // --- A. AMBIL DATA REALTIME DARI CLOUD DATABASE (MENGGUNAKAN GLOBAL RENDER SCRIPT.JS) ---
+        onChildAdded(ref(db, 'cards'), (snapshot) => {
+            const data = snapshot.val();
+            if (typeof window.renderCardElement === 'function') {
+                // Berikan ID dari Firebase Key atau fallback timestamp agar parameter klop
+                const cardData = {
+                    id: data.id || snapshot.key,
+                    loc: data.loc,
+                    img: data.img,
+                    highlight: data.highlight,
+                    story: data.story,
+                    category: data.category,
+                    likes: data.likes || 0
+                };
+                window.renderCardElement(cardData, true);
+            }
+        });
 
-        // --- A. AMBIL DATA REALTIME DARI CLOUD DATABASE ---
-        if (cardsColumn) {
-            onChildAdded(ref(db, 'cards'), (snapshot) => {
-                const data = snapshot.val();
-                renderNewCard(data.loc, data.img, data.highlight, data.story, data.category);
-            });
-        }
+        onChildAdded(ref(db, 'thoughts'), (snapshot) => {
+            const data = snapshot.val();
+            if (typeof window.renderThoughtElement === 'function') {
+                window.renderThoughtElement(data, true);
+            }
+        });
 
-        if (sidebarColumn) {
-            onChildAdded(ref(db, 'thoughts'), (snapshot) => {
-                const data = snapshot.val();
-                renderNewThought(data.text, data.meta);
-            });
-        }
+        // --- B. LOGIKA TOMBOL FORM ADMIN (KIRIM DATA ONLINE) ---
+        const saveCardBtn = document.getElementById('saveCardBtn');
+        if (saveCardBtn) {
+            saveCardBtn.addEventListener('click', () => {
+                const loc = document.getElementById('newCardLoc').value.trim();
+                const img = document.getElementById('newCardImg').value.trim() || 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=800&q=80';
+                const highlight = document.getElementById('newCardHighlight').value.trim();
+                const story = document.getElementById('newCardStory').value.trim();
+                const category = document.getElementById('newCardCategory').value;
 
-        // --- B. LOGIKA TOMBOL FORM ADMIN (KIRIM DATA KE CLOUD) ---
-        window.addEventListener('DOMContentLoaded', () => {
-            const saveCardBtn = document.getElementById('saveCardBtn');
-            if (saveCardBtn) {
-                saveCardBtn.addEventListener('click', () => {
-                    const loc = document.getElementById('newCardLoc').value.trim();
-                    const img = document.getElementById('newCardImg').value.trim() || 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=800&q=80';
-                    const highlight = document.getElementById('newCardHighlight').value.trim();
-                    const story = document.getElementById('newCardStory').value.trim();
-                    const category = document.getElementById('newCardCategory').value;
+                if (!loc || !highlight || !story) {
+                    alert('Harap isi semua teks box petualangan terlebih dahulu! ⚠️');
+                    return;
+                }
 
-                    if (!loc || !highlight || !story) {
-                        alert('Harap isi semua teks box petualangan terlebih dahulu! ⚠️');
-                        return;
-                    }
-
-                    // Push data ke table 'cards' Firebase Cloud
-                    push(ref(db, 'cards'), { loc, img, highlight, story, category });
-
-                    // Reset Input
+                push(ref(db, 'cards'), { 
+                    loc, 
+                    img, 
+                    highlight, 
+                    story, 
+                    category, 
+                    likes: 0, 
+                    id: Date.now() 
+                }).then(() => {
                     document.getElementById('newCardLoc').value = '';
                     document.getElementById('newCardImg').value = '';
                     document.getElementById('newCardHighlight').value = '';
                     document.getElementById('newCardStory').value = '';
                     alert('Jejak Kaki baru berhasil dikirim ke Cloud Server! 🐾✨');
                 });
-            }
+            });
+        }
 
-            const saveThoughtBtn = document.getElementById('saveThoughtBtn');
-            if (saveThoughtBtn) {
-                saveThoughtBtn.addEventListener('click', () => {
-                    const text = document.getElementById('newThoughtText').value.trim();
-                    const meta = document.getElementById('newThoughtMeta').value.trim() || '— Baru Saja';
+        const saveThoughtBtn = document.getElementById('saveThoughtBtn');
+        if (saveThoughtBtn) {
+            saveThoughtBtn.addEventListener('click', () => {
+                const text = document.getElementById('newThoughtText').value.trim();
+                const meta = document.getElementById('newThoughtMeta').value.trim() || '— Baru Saja';
 
-                    if (!text) {
-                        alert('Isi pikiranmu tidak boleh kosong, Admin! 🧠');
-                        return;
-                    }
+                if (!text) {
+                    alert('Isi pikiranmu tidak boleh kosong, Admin! 🧠');
+                    return;
+                }
 
-                    // Push data ke table 'thoughts' Firebase Cloud
-                    push(ref(db, 'thoughts'), { text, meta });
-
-                    // Reset Input
+                push(ref(db, 'thoughts'), { 
+                    text, 
+                    meta, 
+                    id: Date.now() 
+                }).then(() => {
                     document.getElementById('newThoughtText').value = '';
                     document.getElementById('newThoughtMeta').value = '';
                     alert('Isi pikiran acak berhasil disimpan ke Cloud! 🧠💭');
                 });
-            }
-        });
-
-        // --- C. FUNGSI PEMBANTU RENDER ELEMEN ---
-        function renderNewCard(loc, img, highlight, story, category) {
-            const newCard = document.createElement('article');
-            newCard.className = 'card active'; 
-            newCard.setAttribute('data-category', category);
-            newCard.innerHTML = `
-                <div class="card-image-wrapper">
-                    <img src="${img}" alt="${loc}" class="card-img clickable-img">
-                    <span class="card-location">📍 ${loc}</span>
-                    <button class="like-btn" data-liked="false">
-                        <span class="heart-icon">❤️</span> <span class="like-count">0</span>
-                    </button>
-                </div>
-                <div class="card-content">
-                    <div class="highlight-box">
-                        <span class="highlight-badge">HIGHLIGHT MENARIK 🌟</span>
-                        <p class="highlight-text">"${highlight}"</p>
-                    </div>
-                    <h3 class="story-title">Behind The Scene 🎬</h3>
-                    <p class="story-text">${story}</p>
-                </div>
-            `;
-
-            // Hubungkan fungsi Like & Lightbox bawaan script.js
-            if (typeof window.bindNewCardEvents === 'function') {
-                window.bindNewCardEvents(newCard);
-            }
-            cardsColumn.insertBefore(newCard, cardsColumn.children[1]);
-        }
-
-        function renderNewThought(text, meta) {
-            const newThought = document.createElement('div');
-            newThought.className = 'thought-box pop-box active';
-            newThought.innerHTML = `
-                <div class="quote-mark">“</div>
-                <p class="thought-text-content">"${text}"</p>
-                <span class="thought-meta">${meta}</span>
-            `;
-            sidebarColumn.insertBefore(newThought, sidebarColumn.children[1]);
+            });
         }
     </script>
-
-    <!-- Script Utama Fitur Animasi & Login -->
-    <script src="script.js"></script>
 </body>
 </html>
